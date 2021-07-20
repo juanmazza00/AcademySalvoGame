@@ -169,17 +169,10 @@ public class SalvoController {
 
             if (currentGp.get().getSalvoes().size() >= 1) {
                 turn = currentGp.get().getSalvoes().size();
-
             }
-
             if (salvo1.size() > salvo2.size()) {
                 dto.put("error", "It isn't your turn to play");
               return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
-    }
-            if (currentGp.get().getSalvoes().size() >= 1){
-                turn = currentGp.get().getSalvoes().size();
-
-
             }
             if (salvoes.getSalvoLocations().size() <= 0 ) {
                 dto.put("error", "You must at least shoot once");
