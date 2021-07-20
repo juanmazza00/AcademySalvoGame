@@ -160,12 +160,19 @@ public class SalvoController {
                 return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
             }
 
+
             Set<Salvo> salvo1 = currentGp.get().getSalvoes();
             Set<Salvo> salvo2 = gOp.get().getSalvoes();
 
             var turn = 0;
 
-            if (salvo1.size() <= salvo2.size()) {
+
+            if (currentGp.get().getSalvoes().size() >= 1) {
+                turn = currentGp.get().getSalvoes().size();
+
+            }
+
+            if (salvo1.size() > salvo2.size()) {
                 dto.put("error", "It isn't your turn to play");
               return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
     }
@@ -182,8 +189,10 @@ public class SalvoController {
                 dto.put("error", "You have a maximum of 5 shoots");
                 return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
             }
+
                 currentGp.get().addSalvo(salvoes);
                 sal.save(new Salvo( turn, salvoes.getSalvoLocations(), currentGp.get()));
+
 
             return new ResponseEntity<>(makeMap("OK","Salvoes fired!"), HttpStatus.CREATED);}
 
