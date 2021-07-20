@@ -4,11 +4,8 @@ import com.example.salvo.Models.Game;
 import com.example.salvo.Models.GamePlayer;
 import com.example.salvo.Models.Player;
 import com.example.salvo.Models.Salvo;
-import com.example.salvo.Repositorys.GamePlayerRepository;
-import com.example.salvo.Repositorys.GameRepository;
-import com.example.salvo.Repositorys.PlayerRepository;
+import com.example.salvo.Repositorys.*;
 import com.example.salvo.Models.Ship;
-import com.example.salvo.Repositorys.ShipRepository;
 import com.example.salvo.dtos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +34,8 @@ public class SalvoController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private ShipRepository srepo;
+    @Autowired
+    private SalvoRepository sal;
 
 
     @RequestMapping(path = "/players", method = RequestMethod.POST)
@@ -135,11 +134,58 @@ public class SalvoController {
             }
             return new ResponseEntity<>(makeMap("OK","Ships placed!"), HttpStatus.CREATED);}
 
+        @PostMapping("/games/players/{id}/salvoes")
+        public ResponseEntity<Map<String, Object>> fireSalvoes(@PathVariable long id, @RequestBody Salvo salvoes, Authentication authentication) {
+            Optional<GamePlayer> currentGp = gp.findById(id);
+            Map<String, Object> dto = new LinkedHashMap<String, Object>();
+
+            if (authentication == null) {
+                dto.put("error", "Must be logged in");
+                return new ResponseEntity<>(dto, HttpStatus.UNAUTHORIZED);
+            }
+            if (currentGp.isEmpty()) {
+                dto.put("error", "Player doesn't exist");
+                return new ResponseEntity<>(dto, HttpStatus.UNAUTHORIZED);
+
+            }
+            if (currentPlayer(authentication).getGamePlayers().contains(currentGp)) {
+                dto.put("error", "Can't join game");
+                return new ResponseEntity<>(dto, HttpStatus.UNAUTHORIZED);
+            }
+            Game game = currentGp.get().getGame();
+            GamePlayer gamePlayer2;
+            var gOp = gp.findAll().stream().filter(g -> g.getGame().equals(game) && g.getGamePlayerid() != currentGp.get().getGamePlayerid()).findFirst();
+            if (gOp.isEmpty()) {
+                dto.put("error", "You don't have an opponent");
+                return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
+            }
+
+            Set<Salvo> salvo1 = currentGp.get().getSalvoes();
+            Set<Salvo> salvo2 = gOp.get().getSalvoes();
+
+            var turn = 0;
+
+//            if (salvo1.size() <= salvo2.size()) {
+//                dto.put("error", "It isn't your turn to play");
+//               return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
+  //  }
+            if (currentGp.get().getSalvoes().size() >= 1){
+                turn = currentGp.get().getSalvoes().size();
 
 
+            }
+            if (salvoes.getSalvoLocations().size() <= 0 ) {
+                dto.put("error", "You must at least shoot once");
+                return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
+            }
+            if (salvoes.getSalvoLocations().size() > 5) {
+                dto.put("error", "You have a maximum of 5 shoots");
+                return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
+            }
+                currentGp.get().addSalvo(salvoes);
+                sal.save(new Salvo( turn, salvoes.getSalvoLocations(), currentGp.get()));
 
-
-
+            return new ResponseEntity<>(makeMap("OK","Salvoes fired!"), HttpStatus.CREATED);}
 
     @GetMapping("/games")
 
@@ -158,46 +204,7 @@ public class SalvoController {
                             return dto;
                         }
 
-//                        private Map<String, Object> makeGamePlayerDTO (GamePlayer gamePlayer){
-//                            Map<String, Object> dto = new LinkedHashMap<String, Object>();
-//                            dto.put("id", gamePlayer.getGamePlayerid());
-//                            dto.put("player", gamePlayer.getPlayer());
 //
-//                            return dto;
-//                        }
-
-//                        private Map<String, Object> makeGameDTO (Game game){
-//                            Map<String, Object> dto = new LinkedHashMap<String, Object>();
-//                            dto.put("id", game.getGameid());
-//                            dto.put("created", game.getDate());
-//                            dto.put("gamePlayers", game.getGamePlayers().stream().map(this::makeGamePlayerDTO).collect(Collectors.toList()));
-//                            dto.put("scores", game.getGamePlayers().stream().map(this::makeScoreDTO).collect(Collectors.toList()));
-//
-//                            return dto;
-//                        }
-//
-//                        private Map<String, Object> makeScoreDTO (GamePlayer gp){
-//                            Map<String, Object> dto = new LinkedHashMap<>();
-//                            var gps = gp.getScore();
-//                            if (gps.isEmpty()) {
-//                                dto.put("El juego no tiene puntajes.", "");
-//                            } else {
-//                                dto.put("player", gps.get().getPlayer().getUserid());
-//                                dto.put("score", gps.get().getScore());
-//                                dto.put("finishDate", gps.get().getFinishDate());
-//                            }
-//                            return dto;
-//                        }
-
-//                        private Map<String, Object> makePlayerDTO (Player player){
-//                            Map<String, Object> dto = new LinkedHashMap<String, Object>();
-//                            dto.put("id", player.getUserid());
-//                            dto.put("email", player.getUserName());
-//
-//
-//                            return dto;
-//                        }
-
 
                         @GetMapping("/game_view/{gamePlayerid}")
                         public ResponseEntity<Map<String, Object>> getGameView (
@@ -231,23 +238,6 @@ public class SalvoController {
                             return dto;
                         }
 //
-//                        private Map<String, Object> makeShipDTO (Ship ship){
-//                            Map<String, Object> dto = new LinkedHashMap<String, Object>();
-//                            dto.put("type", ship.getType());
-//                            dto.put("locations", ship.getShipLocations());
-//                            return dto;
-//
-//                        }
-
-//                        private Map<String, Object> makeSalvoDTO (Salvo salvo){
-//
-//                            Map<String, Object> dto = new LinkedHashMap<String, Object>();
-//                            dto.put("turn", salvo.getTurn());
-//                            dto.put("player", salvo.getGamePlayer().getPlayer().getUserid());
-//                            dto.put("locations", salvo.getSalvoLocation());
-//
-//                            return dto;
-//                        }
 
 
                         public Player currentPlayer (Authentication authentication){
