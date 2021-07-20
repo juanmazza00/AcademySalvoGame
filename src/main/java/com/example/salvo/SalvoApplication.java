@@ -137,11 +137,11 @@ public class SalvoApplication  extends SpringBootServletInitializer {
 			ShipRepo.save(s6);
 
 			Salvo sal1 = new Salvo( 1, Arrays.asList("A1","B1"), gamePlayer1);
-			Salvo sal2 = new Salvo( 2, Arrays.asList("A10","A5"), gamePlayer2);
-			Salvo sal3 = new Salvo( 3, Arrays.asList("B3","B4"), gamePlayer1);
-			Salvo sal4 = new Salvo( 4, Arrays.asList("E1","E2"), gamePlayer2);
-			Salvo sal5 = new Salvo( 5, Arrays.asList("D7","D8"), gamePlayer1);
-			Salvo sal6 = new Salvo( 6, Arrays.asList("C6","B6"), gamePlayer2);
+			Salvo sal2 = new Salvo( 1, Arrays.asList("A10","A5"), gamePlayer2);
+			Salvo sal3 = new Salvo( 2, Arrays.asList("B3","B4"), gamePlayer1);
+			Salvo sal4 = new Salvo( 2, Arrays.asList("E1","E2"), gamePlayer2);
+			Salvo sal5 = new Salvo( 3, Arrays.asList("D7","D8"), gamePlayer1);
+			Salvo sal6 = new Salvo( 3, Arrays.asList("C6","B6"), gamePlayer2);
 			Salvo sal7 = new Salvo( 1, Arrays.asList("A1","B1"), gamePlayer6);
 			Salvo sal8 = new Salvo( 2, Arrays.asList("A10","A5"), gamePlayer5);
 			Salvo sal9 = new Salvo( 3, Arrays.asList("B3","B4"), gamePlayer6);

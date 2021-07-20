@@ -16,7 +16,7 @@ public class Salvo {
 
     @ElementCollection
     @Column(name = "SalvoLocation")
-    private List<String> SalvoLocation;
+    private List<String> salvoLocations;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gamePlayer")
@@ -25,9 +25,9 @@ public class Salvo {
     public Salvo() {
     }
 
-    public Salvo(int turn, List<String> salvoLocation, GamePlayer gamePlayer) {
+    public Salvo(int turn, List<String> salvoLocations, GamePlayer gamePlayer) {
         this.turn = turn;
-        SalvoLocation = salvoLocation;
+        this.salvoLocations = salvoLocations;
         this.gamePlayer = gamePlayer;
     }
 
@@ -51,11 +51,11 @@ public class Salvo {
         this.turn = turn;
     }
 
-    public List<String> getSalvoLocation() {
-        return SalvoLocation;
+    public List<String> getSalvoLocations() {
+        return salvoLocations;
     }
 
-    public void setSalvoLocation(List<String> salvoLocation) {
-        SalvoLocation = salvoLocation;
+    public void setSalvoLocations(List<String> salvoLocations) {
+        this.salvoLocations = salvoLocations;
     }
 }

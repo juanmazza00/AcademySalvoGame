@@ -13,7 +13,7 @@ public class SalvoDto {
     public SalvoDto(Salvo salvo) {
         this.player = salvo.getGamePlayer().getPlayer().getUserid();
         this.turn = salvo.getTurn();
-        this.Locations = salvo.getSalvoLocation();
+        this.Locations = salvo.getSalvoLocations();
     }
 
     public Long getPlayer() {
