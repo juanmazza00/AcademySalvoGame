@@ -15,14 +15,15 @@ public class GamePlayer {
     private long gamePlayerid;
     private Date date;
     private String userName;
-    private int hit;
+    private int Hit;
+
 
     public GamePlayer() {
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "salvoid")
-    private Salvo salvo;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "salvoid")
+//    private Salvo salvo;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userid")
@@ -35,6 +36,7 @@ public class GamePlayer {
 //    @ManyToOne(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "shipid")
 //    private Ship ship;
+
 
     public GamePlayer(Player currentPlayer, Game game, LocalDateTime now) {
     }

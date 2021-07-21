@@ -75,11 +75,7 @@ public class Player {
         return userid;
     }
 
-   // public Score getScore(Game game){
-     //  game.getScore().stream().filter(score ->);
 
-
-    //}
 
 
 }
