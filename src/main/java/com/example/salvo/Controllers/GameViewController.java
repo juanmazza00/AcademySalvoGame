@@ -39,7 +39,7 @@ public class GameViewController {
     @GetMapping("/game_view/{gamePlayerid}")
     public ResponseEntity<Map<String, Object>> getGameView (
             @PathVariable long gamePlayerid, Authentication authentication){
-        GamePlayer gamePlayer = gp.getById(gamePlayerid);
+        GamePlayer gamePlayer = gp.getOne(gamePlayerid);
         Optional<Player> currentPlayer = prepo.findByUserName(authentication.getName());
 
         if (currentPlayer.get().getGamePlayers().contains(gamePlayer)) {
