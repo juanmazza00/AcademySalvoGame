@@ -44,7 +44,7 @@ public class PlayerController {
             return new ResponseEntity(dto, HttpStatus.FORBIDDEN);
         }
 
-        if (prepo.findByUserName(email) != null) {
+        if (prepo.findByUserName(email).isPresent()) {
             dto.put("error", "Name already in use");
             return new ResponseEntity(dto, HttpStatus.FORBIDDEN);
         }
@@ -77,5 +77,6 @@ public class PlayerController {
         dto.put("gpid", gamePlayer.getGamePlayerid());
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
     }
+
 }
 

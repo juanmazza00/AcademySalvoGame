@@ -5,14 +5,14 @@ import com.example.salvo.Models.Salvo;
 import java.util.List;
 
 public class SalvoDto {
-    private Long player;
     private int turn;
+    private Long player;
     private List<String> Locations;
 
 
     public SalvoDto(Salvo salvo) {
-        this.player = salvo.getGamePlayer().getPlayer().getUserid();
         this.turn = salvo.getTurn();
+        this.player = salvo.getGamePlayer().getPlayer().getUserid();
         this.Locations = salvo.getSalvoLocations();
     }
 

@@ -52,10 +52,10 @@ public class SalvoApplication  extends SpringBootServletInitializer {
 		return (args) -> {
 
 
-			Player player1 = new Player("jj@gmail.com", passwordEncoder().encode("24"));
-			Player player2 = new Player("jj12312@gmail.com",passwordEncoder().encode("42"));
-			Player player3 = new Player("121312@gmail.com",passwordEncoder().encode("kb"));
-			Player player4 = new Player("jjLOpez@gmail.com", passwordEncoder().encode("mole"));
+			Player player1 = new Player("Juan@gmail.com", passwordEncoder().encode("24"));
+			Player player2 = new Player("Guille@gmail.com",passwordEncoder().encode("42"));
+			Player player3 = new Player("Tomi@gmail.com",passwordEncoder().encode("kb"));
+			Player player4 = new Player("Nico@gmail.com", passwordEncoder().encode("mole"));
 			Player player5 = new Player("EnzoPerez@gmail.com", passwordEncoder().encode("1234"));
 			Player player6 = new Player("MarceloGallardo@gmail.com",passwordEncoder().encode ("541"));
 			PlayerRepo.save(player1);
@@ -79,6 +79,7 @@ public class SalvoApplication  extends SpringBootServletInitializer {
 			GameRepo.save(game5);
 			GameRepo.save(game6);
 			GameRepo.save(game7);
+
 
 
 			Score sc1 = new Score(1.0, new Date(),player1, game1);
@@ -124,18 +125,20 @@ public class SalvoApplication  extends SpringBootServletInitializer {
 			GmplyrRepo.save(gamePlayer13);
 
 
-			Ship s1 = new Ship("Batlleship", Arrays.asList("A10", "B10", "C10"), gamePlayer1 );
-			Ship s2 = new Ship("Batlleship", Arrays.asList("A1", "A2", "A3"), gamePlayer2);
-			Ship s3 = new Ship("Cruise", Arrays.asList("D4", "D5" ,"D6"),  gamePlayer1);
-			Ship s4 = new Ship("Cruise", Arrays.asList("F3","F4", "F5"),  gamePlayer2);
-			Ship s5 = new Ship("Submarine", Arrays.asList("F1", "E1","D1" ),  gamePlayer1);
-			Ship s6 = new Ship("Submarine", Arrays.asList("C7", "D7" , "E7"),  gamePlayer2);
+			Ship s1 = new Ship("battleship", Arrays.asList("A10", "B10", "C10", "D10"), gamePlayer1 );
+			Ship s2 = new Ship("battleship", Arrays.asList("A1", "A2", "A3", "A4"), gamePlayer2);
+			Ship s3 = new Ship("destroyer", Arrays.asList("J6", "J7" ,"J8"),  gamePlayer1);
+			Ship s4 = new Ship("destroyer", Arrays.asList("F3","F4", "F5"),  gamePlayer2);
+			Ship s5 = new Ship("submarine", Arrays.asList("D1", "E1","F1" ),  gamePlayer1);
+			Ship s6 = new Ship("submarine", Arrays.asList("C7", "D7" , "E7"),  gamePlayer2);
+			Ship s7 = new Ship("carrier", Arrays.asList("B4","C4","D4","E4","F4"), gamePlayer1 );
 			ShipRepo.save(s1);
 			ShipRepo.save(s2);
 			ShipRepo.save(s3);
 			ShipRepo.save(s4);
 			ShipRepo.save(s5);
 			ShipRepo.save(s6);
+			ShipRepo.save(s7);
 
 			Salvo sal1 = new Salvo( 1, Arrays.asList("A1","B1"), gamePlayer1);
 			Salvo sal2 = new Salvo( 1, Arrays.asList("A10","A5"), gamePlayer2);
@@ -221,6 +224,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.usernameParameter("name")
 				.passwordParameter("pwd")
 				.loginPage("/api/login");
+
 
 		http.logout().logoutUrl("/api/logout");
 

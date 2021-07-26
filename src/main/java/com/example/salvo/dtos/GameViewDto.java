@@ -1,36 +1,87 @@
 package com.example.salvo.dtos;
 
+import com.example.salvo.GameState;
 import com.example.salvo.Models.GamePlayer;
+import com.example.salvo.util;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class GameViewDto {
-    private String gameState;
-    private Long id;
-    private Date created;
-    private Set<GamePlayerDto> gamePlayers = new HashSet<>();
-    private Set<ShipDto> ships = new HashSet<>();
-    private Set<SalvoDto> salvoes = new HashSet<>();
-    private HitDto hits ;
 
 
-    public GameViewDto(GamePlayer GameView){
-        this.gameState = "PLACESHIPS";
-        this.id = GameView.getGame().getGameid();
-        this.created = GameView.getDate();
-        this.gamePlayers = GameView.getGame().getGamePlayers().stream().map(gmp -> new GamePlayerDto(gmp)).collect(Collectors.toSet());
-        this.ships = GameView.getShips().stream().map(ShipDto::new).collect(Collectors.toSet());
-        this.salvoes = GameView.getGame().getGamePlayers().stream().flatMap(sv -> sv.getSalvoes().stream().map(sp -> new SalvoDto(sp))).collect(Collectors.toSet());
-        this.hits = new HitDto();
+    private GameState gameState;
+    private  Long id;
+    private  Date created;
+    private  List<GamePlayerDto> gamePlayers;
+    private  List<ShipDto> ships;
+    private  List<SalvoDto> salvoes;
+    private  HitDto hits;
+
+
+    public GameViewDto(GamePlayer gamePlayer) {
+        this.gameState = getGameState(gamePlayer);
+        this.id = gamePlayer.getGame().getGameid();
+        this.created = gamePlayer.getDate();
+        this.gamePlayers = gamePlayer.getGame().getGamePlayers().stream().map(GamePlayerDto::new).collect(Collectors.toList());
+        this.ships = gamePlayer.getShips().stream().map(ShipDto::new).collect(Collectors.toList());
+        this.salvoes = gamePlayer.getGame().getGamePlayers().stream().flatMap(sv -> sv.getSalvoes().stream().map(SalvoDto::new)).collect(Collectors.toList());
+        this.hits = new HitDto(gamePlayer);
+
     }
 
 
+    public GameState getGameState(GamePlayer gamePlayer) {
 
-    public String getGameState() {
+        if (gamePlayer.getShips().size() == 0) {
+            return GameState.PLACESHIPS;
+        }
+        if (util.opponent(gamePlayer).isEmpty()) {
+            return GameState.WAITINGFOROPP;
+
+        }
+
+        if (util.opponent(gamePlayer).get().getShips().size() == 0) {
+            return GameState.WAIT;
+        }
+        if (gamePlayer.getSalvoes().size() > util.opponent(gamePlayer).get().getSalvoes().size()) {
+            return GameState.WAIT;
+        }
+            List<String> selfS = gamePlayer.getShips().stream().flatMap(s -> s.getShipLocations().stream()).collect(Collectors.toList());
+            List<String> oppS = util.opponent(gamePlayer).get().getShips().stream().flatMap(s -> s.getShipLocations().stream()).collect(Collectors.toList());
+
+            List<String> selfSal = gamePlayer.getSalvoes().stream().flatMap(sv -> sv.getSalvoLocations().stream()).collect(Collectors.toList());
+            List<String> oppSal = util.opponent(gamePlayer).get().getSalvoes().stream().flatMap(sv -> sv.getSalvoLocations().stream()).collect(Collectors.toList());
+
+            List<String> selfH = oppS.stream().filter(selfSal::contains).collect(Collectors.toList());
+            List<String> oppH = selfS.stream().filter(oppSal::contains).collect(Collectors.toList());
+
+
+        if (oppH.size() == selfH.size() && selfH.size() == oppS.size()) {
+
+            return GameState.TIE;
+        }
+        if (selfS.size() == oppH.size()) {
+
+            return GameState.LOSE;
+        }
+        if (oppS.size() == selfH.size()) {
+            return GameState.WIN;
+        }
+
+        return GameState.PLAY;
+
+    }
+
+
+    public GameState getGameState() {
         return gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 
     public Long getId() {
@@ -41,15 +92,15 @@ public class GameViewDto {
         return created;
     }
 
-    public Set<GamePlayerDto> getGamePlayers() {
+    public List<GamePlayerDto> getGamePlayers() {
         return gamePlayers;
     }
 
-    public Set<ShipDto> getShips() {
+    public List<ShipDto> getShips() {
         return ships;
     }
 
-    public Set<SalvoDto> getSalvoes() {
+    public List<SalvoDto> getSalvoes() {
         return salvoes;
     }
 

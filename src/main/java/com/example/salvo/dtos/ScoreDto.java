@@ -22,6 +22,7 @@ public class ScoreDto {
             this.score = gps.get().getScore();
             this.finishDate = gps.get().getFinishDate();
         }
+
     }
 
     public long getPlayer() {
